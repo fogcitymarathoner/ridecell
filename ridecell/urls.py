@@ -13,9 +13,19 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+from django.conf.urls import include
 from django.conf.urls import url
 from django.contrib import admin
 
+from parkingspot.api import ParkSpotResource
+from parkingspot.api import ParkSpotReservationResource
+
+
+ps_resource = ParkSpotResource()
+psr_resource = ParkSpotReservationResource()
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^api/parkspots/', include(ps_resource.urls)),
+    url(r'^api/parkspotreservations/', include(psr_resource.urls)),
 ]
