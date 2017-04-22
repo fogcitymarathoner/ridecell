@@ -9,3 +9,6 @@ C:\Users\Marc\AppData\Local\Programs\Python\Python36-32\python.exe manage.py db 
 
 Run tests
 C:\Users\Marc\AppData\Local\Programs\Python\Python36-32\Scripts\nosetests.exe
+
+Make DB Revision
+C:\Users\Marc\AppData\Local\Programs\Python\Python36-32\python.exe manage.py db revision "make lat long unique index"

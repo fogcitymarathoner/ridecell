@@ -14,11 +14,7 @@ from models import ParkSpot
 from models import Reservation
 from models import User
 
-epoch = dt(year=1970, month=1, day=1, hour=0, minute=0, tzinfo=pytz.UTC)
-
-
-def random_string(N):
-  return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(N))
+import testing
 
 
 class ParkSpotModelTest(TestCase):
@@ -47,7 +43,7 @@ class ParkSpotModelTest(TestCase):
         ps.is_available(self.session)
 
       for i in range(5):
-        u = User(name=random_string(5))
+        u = User(name=testing.random_string(5))
         self.session.add(u)
         self.session.commit()
         self.users.append(u)
@@ -67,8 +63,8 @@ class ParkSpotModelTest(TestCase):
 
     def test_parkspot_reservation(self):
       """Tests parkspot unavailable after reservation"""
-      rstart = epoch
-      rend = epoch + td(hours=1)
+      rstart = testing.epoch
+      rend = testing.epoch + td(hours=1)
       self.parkingspots[0].reserve(self.session, self.users[0], rstart=rstart, rend=rend)
       self.assertFalse(self.parkingspots[0].is_available(self.session, rstart=rstart, rend=rend))
 

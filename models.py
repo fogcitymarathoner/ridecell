@@ -1,6 +1,6 @@
 import sys
 from datetime import datetime as dt
-from datetime import timedelta as td
+import logging
 
 import sqlalchemy as sa
 from sqlalchemy.orm import relationship
@@ -36,10 +36,12 @@ class ParkSpot(Base):
       except NoResultFound:
         return True
       except:
-        print('Something bad happened reading the reservations table')
-        print("Unexpected error:", sys.exc_info()[0])
+        logging.error('Something bad happened reading the reservations table')
+        logging.error("Unexpected error:", sys.exc_info()[0])
         raise
 
+    def to_dict(self):
+      return {}
     def reserve(self, session, user, rstart, rend):
       """Reserve a parkspot
       return: reservation if successful, else False
@@ -52,8 +54,8 @@ class ParkSpot(Base):
           session.commit()
           return res
         except:
-          print('Something bad happened saving reservation.')
-          print("Unexpected error:", sys.exc_info()[0])
+          logging.error('Something bad happened saving reservation.')
+          logging.error("Unexpected error:", sys.exc_info()[0])
           session.rollback()
           raise
         else:

@@ -30,3 +30,4 @@ def upgrade():
 
 def downgrade():
     op.drop_table('reservation')
+    op.drop_index('ix_time')
