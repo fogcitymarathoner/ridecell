@@ -42,11 +42,14 @@ class ParkSpotModelTest(TestCase):
           lng=random.uniform(1.0, 64.0),
         )
         self.session.add(ps)
+        self.session.commit()
         self.parkingspots.append(ps)
         ps.is_available(self.session)
+
       for i in range(5):
         u = User(name=random_string(5))
         self.session.add(u)
+        self.session.commit()
         self.users.append(u)
       self.session.commit()
 
@@ -63,9 +66,11 @@ class ParkSpotModelTest(TestCase):
         self.assertTrue(ps.is_available(self.session))
 
     def test_parkspot_reservation(self):
-      """Tests parkspot reservation book"""
-      self.parkingspots[0].reserve(self.session, self.users[0], rstart=epoch, rend=epoch+td(hours=1))
-      self.assertFalse(self.parkingspots[0].is_available(self.session, rstart=epoch, rend=epoch+td(hours=1)))
+      """Tests parkspot unavailable after reservation"""
+      rstart = epoch
+      rend = epoch + td(hours=1)
+      self.parkingspots[0].reserve(self.session, self.users[0], rstart=rstart, rend=rend)
+      self.assertFalse(self.parkingspots[0].is_available(self.session, rstart=rstart, rend=rend))
 
 if __name__ == '__main__':
     unittest.main()
