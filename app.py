@@ -5,8 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = FlaskAPI(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://ridecell:ridepass@localhost:5432/ridecell'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config.from_object('config')
 
 db = SQLAlchemy(app)
 alembic = Alembic()
