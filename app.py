@@ -50,13 +50,19 @@ def parkspot_list():
 
     # request.method == 'GET'
     try:
-        lat = request.form.get('lat', default=None, type=float)
-        lng = request.form.get('lng', default=None, type=float)
-        radius = request.form.get('radius', default=None, type=float)
+        lat = request.args.get('lat', default=None, type=float)
+        lng = request.args.get('lng', default=None, type=float)
+        radius = request.args.get('radius', default=None, type=int) # meters
     except ValueError:
         raise MethodNotAllowed
-    return [json.dumps(ps.to_dict()) for ps in session.query(models.ParkSpot).all()]
+    if lat and lng and radius:
+        # https://johanndutoit.net/searching-in-a-radius-using-postgres/
+        q = "SELECT parkspot.id, parkspot.lat, parkspot.lng FROM parkspot WHERE earth_box( ll_to_earth(cast(%s as float8), cast(%s as float8)), %s) @> ll_to_earth(cast(parkspot.lat as float8), cast(parkspot.lng as float8));" % (lat, lng, radius)
 
+        session.execute(q)
+        return [json.dumps(ps.to_dict()) for ps in session.execute(q).all()]
+    else:
+        raise MethodNotAllowed
 
 @app.route("/<int:key>/", methods=['GET', 'PUT', 'DELETE'])
 def parkspot_detail(key):
